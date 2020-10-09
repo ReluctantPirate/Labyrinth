@@ -522,13 +522,15 @@ void pathDisplay() {
 
   byte currentHue = map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_HUE_SHALLOW, WATER_HUE_DEEP);
   byte currentSat = map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_SAT_SHALLOW, WATER_SAT_DEEP);
-  byte currentBri = map(timer.getRemaining(), 0, REVERT_TIME_PATH, 80, map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_BRI_DEEP, WATER_BRI_SHALLOW));
+  byte currentBri = map(timer.getRemaining(), 0, REVERT_TIME_PATH, 60, map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_BRI_DEEP, WATER_BRI_SHALLOW));
 
   setColor(makeColorHSB(currentHue, currentSat, currentBri));
 
   if (isStairs) {
-    setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
-    setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
+    stairDisplay(currentHue, currentSat, currentBri);
+
+    //      setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
+    //      setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
   }
 
 }
@@ -537,18 +539,32 @@ void wallDisplay() {
   byte grassHue = map(level, 0, AVATAR_5 & LEVEL_MASK, GRASS_HUE_SHALLOW, GRASS_HUE_DEEP);
   byte waterHue = map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_HUE_SHALLOW, WATER_HUE_DEEP);
   byte currentHue = map(REVERT_TIME_PATH - timer.getRemaining(), 0, REVERT_TIME_PATH, grassHue, waterHue);
-  byte currentBri = map(timer.getRemaining(), 0, REVERT_TIME_PATH, 80, map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_BRI_DEEP, WATER_BRI_SHALLOW));
+  byte currentBri = map(timer.getRemaining(), 0, REVERT_TIME_PATH, 60, map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_BRI_DEEP, WATER_BRI_SHALLOW));
 
   setColor(makeColorHSB(currentHue, 255, currentBri));
 
   if (isStairs) {
-    setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
-    setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
+    stairDisplay(currentHue, 255, currentBri);
+    //      setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
+    //      setColorOnFace(makeColorHSB(currentHue, 0, currentBri), random(5));
+  }
+}
+
+#define SPARKLE_CYCLE_TIME 1000
+#define SPARKLE_FLASH_TIME 100
+byte sparkleOffset[6] = {0, 3, 5, 1, 4, 2};
+
+void stairDisplay(byte hue, byte sat, byte bri) {
+  byte sparkleFrame = (millis() % SPARKLE_CYCLE_TIME) / SPARKLE_FLASH_TIME;
+  if (sparkleFrame < 6) {
+    setColorOnFace(WHITE, sparkleOffset[sparkleFrame]);
   }
 }
 
 void fogDisplay() {
   byte currentHue = map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_HUE_SHALLOW, WATER_HUE_DEEP);
   byte currentSat = map(level, 0, AVATAR_5 & LEVEL_MASK, WATER_SAT_SHALLOW, WATER_SAT_DEEP);
-  setColor(makeColorHSB(currentHue, currentSat, random(32) + 80));
+  FOREACH_FACE(f) {
+    setColorOnFace(makeColorHSB(currentHue, currentSat, 60 - random(40)), f);
+  }
 }
