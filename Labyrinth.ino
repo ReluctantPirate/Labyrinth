@@ -4,8 +4,8 @@
 #define FOG_COLOR dim(WHITE, 32)
 #define RESET_COLOR MAGENTA
 #define STAIRS_COLOR YELLOW
-#define REVERT_TIME_PATH 3000
-#define REVERT_TIME_WALL  3000
+#define REVERT_TIME_PATH 2000
+#define REVERT_TIME_WALL  2000
 #define STAIR_INTERVAL    8000
 //#define GAME_TIME_MAX 180000 //3 minutes
 #define GAME_TIME_MAX 360000 //6 minutes
@@ -557,7 +557,7 @@ byte sparkleOffset[6] = {0, 3, 5, 1, 4, 2};
 void stairDisplay(byte hue, byte sat, byte bri) {
   byte sparkleFrame = (millis() % SPARKLE_CYCLE_TIME) / SPARKLE_FLASH_TIME;
   if (sparkleFrame < 6) {
-    setColorOnFace(WHITE, sparkleOffset[sparkleFrame]);
+    setColorOnFace(dim(WHITE, bri), sparkleOffset[sparkleFrame]);
   }
 }
 
